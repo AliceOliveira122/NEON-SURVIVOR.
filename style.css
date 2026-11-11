@@ -1,0 +1,352 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;900&family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+    --background: #080817;
+    --panel: #111126;
+    --purple: #a855f7;
+    --blue: #38bdf8;
+    --pink: #f472b6;
+    --text: #eeeeff;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background:
+        radial-gradient(ellipse at 50% 0%, #211344, transparent 60%),
+        var(--background);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    padding: 30px 15px;
+}
+
+.top {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.logo {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(27px, 5vw, 42px);
+    font-weight: 900;
+    letter-spacing: 4px;
+    text-shadow: 0 0 20px var(--purple);
+}
+
+.logo span {
+    color: var(--blue);
+}
+
+.subtitle {
+    color: #8585aa;
+    font-size: 10px;
+    letter-spacing: 5px;
+    margin-top: 8px;
+}
+
+.game-wrapper {
+    max-width: 1000px;
+    margin: auto;
+}
+
+.hud {
+    display: grid;
+    grid-template-columns: 1.4fr 1.4fr 1fr 0.7fr;
+    gap: 12px;
+    padding: 17px;
+    background: rgba(17, 17, 38, 0.95);
+    border: 1px solid #38335f;
+    border-radius: 12px 12px 0 0;
+}
+
+.stat, .score-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 8px;
+}
+
+.hud span {
+    color: #9292b5;
+    font-size: 9px;
+    letter-spacing: 2px;
+}
+
+.hud strong {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 15px;
+}
+
+.bar {
+    width: 100%;
+    height: 8px;
+    background: #292943;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.health-fill {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, #f43f5e, #fb7185);
+    transition: width 0.2s;
+    box-shadow: 0 0 10px #f43f5e;
+}
+
+.xp-fill {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, #38bdf8, #a855f7);
+    transition: width 0.2s;
+    box-shadow: 0 0 10px #38bdf8;
+}
+
+.score-box strong {
+    color: var(--blue);
+}
+
+.arena {
+    position: relative;
+    overflow: hidden;
+    background: #080817;
+    border: 1px solid #38335f;
+    border-top: none;
+}
+
+canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    cursor: crosshair;
+}
+
+.screen {
+    position: absolute;
+    inset: 0;
+    background: rgba(8, 8, 23, 0.94);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.symbol {
+    color: var(--blue);
+    font-size: 55px;
+    margin-bottom: 15px;
+    text-shadow: 0 0 25px var(--blue);
+}
+
+.screen h1 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(24px, 5vw, 48px);
+    color: var(--purple);
+    text-shadow: 0 0 25px var(--purple);
+    letter-spacing: 3px;
+}
+
+.screen h2 {
+    font-family: 'Orbitron', sans-serif;
+    color: var(--blue);
+    font-size: clamp(20px, 4vw, 32px);
+    margin-bottom: 15px;
+}
+
+.description {
+    color: #aaaacb;
+    margin: 15px 0 25px;
+    font-size: 14px;
+}
+
+button {
+    border: 1px solid #a855f7;
+    background: linear-gradient(135deg, #7c3aed, #2563eb);
+    color: white;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    padding: 15px 25px;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 22px #a855f7;
+}
+
+.instructions {
+    margin-top: 25px;
+    color: #9999b7;
+    font-size: 11px;
+    line-height: 2;
+}
+
+.best-menu {
+    margin-top: 20px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 12px;
+    color: #ffe08a;
+}
+
+.upgrade-options {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 25px;
+    width: 100%;
+    max-width: 720px;
+}
+
+.upgrade-card {
+    flex: 1 1 170px;
+    max-width: 210px;
+    min-height: 160px;
+    padding: 20px 12px;
+    border: 1px solid #494078;
+    background: #17152f;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.upgrade-card:hover {
+    border-color: var(--blue);
+    background: #252044;
+    transform: translateY(-5px);
+    box-shadow: 0 0 20px #38bdf855;
+}
+
+.upgrade-card .icon {
+    font-size: 32px;
+    margin-bottom: 12px;
+}
+
+.upgrade-card h3 {
+    color: var(--blue);
+    font-size: 12px;
+    margin-bottom: 10px;
+}
+
+.upgrade-card p {
+    font-size: 11px;
+    line-height: 1.5;
+    color: #aaaacb;
+}
+
+.results {
+    display: flex;
+    gap: 25px;
+    margin: 25px 0;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.results div {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.results span {
+    font-size: 9px;
+    color: #aaaacb;
+    letter-spacing: 1px;
+}
+
+.results strong {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 23px;
+    color: #ffe08a;
+}
+
+.secondary {
+    margin-top: 12px;
+    background: #242440;
+    border-color: #555577;
+}
+
+.bottom-info {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 5px;
+    color: #777797;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 9px;
+    letter-spacing: 2px;
+}
+
+.mobile-controls {
+    display: none;
+}
+
+@media (max-width: 650px) {
+    body {
+        padding: 20px 8px;
+    }
+
+    .hud {
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+
+    .bottom-info {
+        font-size: 7px;
+        letter-spacing: 1px;
+    }
+
+    .mobile-controls {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 7px;
+        margin-top: 15px;
+    }
+
+    .mobile-controls div {
+        display: flex;
+        gap: 7px;
+    }
+
+    .mobile-controls button {
+        width: 55px;
+        height: 48px;
+        padding: 0;
+        touch-action: none;
+    }
+
+    #dashBtn {
+        width: 100px;
+        color: #ffe08a;
+    }
+
+    .instructions {
+        font-size: 9px;
+    }
+
+    .upgrade-options {
+        gap: 7px;
+    }
+
+    .upgrade-card {
+        min-height: 125px;
+        padding: 12px 7px;
+        flex-basis: 125px;
+    }
+}
