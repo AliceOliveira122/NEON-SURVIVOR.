@@ -47,9 +47,7 @@ const mobile = {
 
 $("menuBest").textContent = best;
 
-// =====================================
-// CONFIGURAÇÃO DO JOGADOR
-// =====================================
+// JOGADOR
 
 function createPlayer() {
     return {
@@ -66,19 +64,17 @@ function createPlayer() {
         invincible: 0,
         dashCooldown: 0,
         dashTime: 0,
-        dashSpeed: 650
+        dashSpeed: 650,
+        aimAngle: 0
     };
 }
 
-// =====================================
 // FUNÇÕES VISUAIS
-// =====================================
 
 function drawBackground() {
     ctx.fillStyle = "#080817";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Grade futurista
     ctx.strokeStyle = "rgba(100, 90, 180, 0.12)";
     ctx.lineWidth = 1;
 
@@ -96,7 +92,6 @@ function drawBackground() {
         ctx.stroke();
     }
 
-    // Estrelas decorativas
     stars.forEach(star => {
         ctx.fillStyle = "rgba(180, 180, 255, 0.6)";
         ctx.fillRect(star.x, star.y, 2, 2);
@@ -123,31 +118,22 @@ function glowCircle(x, y, radius, color, blur = 20) {
     ctx.restore();
 }
 
-// =====================================
 // DESENHAR JOGADOR
-// =====================================
 
 function drawPlayer() {
     ctx.save();
 
     ctx.translate(player.x, player.y);
+    ctx.rotate(player.aimAngle + Math.PI / 2);
 
-    let angle = Math.atan2(
-        pointer.y - player.y,
-        pointer.x - player.x
-    );
-
-    ctx.rotate(angle + Math.PI / 2);
-
-    if (player.invincible > 0 && Math.floor(gameTime * 12) % 2 === 0) {
+    if (player.invincible > 0 &&
+        Math.floor(gameTime * 12) % 2 === 0) {
         ctx.globalAlpha = 0.4;
     }
 
-    // Sombra luminosa
     ctx.shadowColor = "#38bdf8";
     ctx.shadowBlur = 25;
 
-    // Corpo
     ctx.fillStyle = "#38bdf8";
     ctx.beginPath();
     ctx.moveTo(0, -20);
@@ -157,7 +143,6 @@ function drawPlayer() {
     ctx.closePath();
     ctx.fill();
 
-    // Centro
     ctx.fillStyle = "#ffffff";
     ctx.beginPath();
     ctx.arc(0, 0, 5, 0, Math.PI * 2);
@@ -165,7 +150,6 @@ function drawPlayer() {
 
     ctx.restore();
 
-    // Escudo visual
     if (player.invincible > 0) {
         ctx.beginPath();
         ctx.arc(player.x, player.y, 25, 0, Math.PI * 2);
@@ -175,13 +159,10 @@ function drawPlayer() {
     }
 }
 
-// =====================================
 // INIMIGOS
-// =====================================
 
 function spawnEnemy() {
     let side = Math.floor(Math.random() * 4);
-
     let x, y;
 
     if (side === 0) {
@@ -199,7 +180,6 @@ function spawnEnemy() {
     }
 
     let type = Math.random();
-
     let enemy;
 
     if (type < 0.60) {
@@ -234,7 +214,12 @@ function spawnEnemy() {
         };
     }
 
-    enemies.push({ ...enemy, x, y, maxHealth: enemy.health });
+    enemies.push({
+        ...enemy,
+        x,
+        y,
+        maxHealth: enemy.health
+    });
 }
 
 function drawEnemies() {
@@ -247,14 +232,12 @@ function drawEnemies() {
             18
         );
 
-        // Olhos
         ctx.fillStyle = "#ffffff";
         ctx.beginPath();
         ctx.arc(enemy.x - 4, enemy.y - 3, 2, 0, Math.PI * 2);
         ctx.arc(enemy.x + 4, enemy.y - 3, 2, 0, Math.PI * 2);
         ctx.fill();
 
-        // Barra de vida
         if (enemy.health < enemy.maxHealth) {
             ctx.fillStyle = "#292943";
             ctx.fillRect(
@@ -268,7 +251,8 @@ function drawEnemies() {
             ctx.fillRect(
                 enemy.x - enemy.radius,
                 enemy.y - enemy.radius - 9,
-                enemy.radius * 2 * (enemy.health / enemy.maxHealth),
+                enemy.radius * 2 *
+                (enemy.health / enemy.maxHealth),
                 4
             );
         }
@@ -284,7 +268,6 @@ function updateEnemies(dt) {
         enemy.x += (dx / distance) * enemy.speed * dt;
         enemy.y += (dy / distance) * enemy.speed * dt;
 
-        // Colisão com jogador
         if (distance < player.radius + enemy.radius) {
             if (player.invincible <= 0) {
                 player.health -= enemy.damage;
@@ -305,18 +288,12 @@ function updateEnemies(dt) {
     });
 }
 
-// =====================================
-// TIROS
-// =====================================
+// TIROS COM A TECLA J
 
 function shoot() {
-    let target = null;
+    if (!keys["j"]) return;
 
-    if (pointer.down) {
-        target = pointer;
-    } else if (isMobile()) {
-        target = findNearestEnemy();
-    }
+    let target = findNearestEnemy();
 
     if (!target) return;
 
@@ -325,8 +302,12 @@ function shoot() {
         target.x - player.x
     );
 
+    player.aimAngle = angle;
+
     for (let i = 0; i < player.bulletCount; i++) {
-        let spread = (i - (player.bulletCount - 1) / 2) * 0.13;
+        let spread =
+            (i - (player.bulletCount - 1) / 2) * 0.13;
+
         let finalAngle = angle + spread;
 
         bullets.push({
@@ -428,9 +409,7 @@ function updateBullets(dt) {
     enemies = enemies.filter(e => !e.dead);
 }
 
-// =====================================
 // EXPERIÊNCIA
-// =====================================
 
 function drawGems() {
     gems.forEach(gem => {
@@ -449,7 +428,6 @@ function updateGems(dt) {
         let dy = player.y - gem.y;
         let distance = Math.hypot(dx, dy) || 1;
 
-        // Ímã de experiência
         if (distance < 110) {
             gem.x += (dx / distance) * 240 * dt;
             gem.y += (dy / distance) * 240 * dt;
@@ -470,26 +448,20 @@ function updateGems(dt) {
     gems = gems.filter(gem => !gem.collected);
 }
 
-// =====================================
 // MELHORIAS
-// =====================================
 
 const upgrades = [
     {
         icon: "⚔️",
         name: "DANO EXTRA",
         description: "Aumenta o dano dos seus disparos em 25%.",
-        apply: () => {
-            player.damage *= 1.25;
-        }
+        apply: () => player.damage *= 1.25
     },
     {
         icon: "💨",
         name: "VELOCIDADE",
         description: "Aumenta sua velocidade de movimento em 15%.",
-        apply: () => {
-            player.speed *= 1.15;
-        }
+        apply: () => player.speed *= 1.15
     },
     {
         icon: "❤️",
@@ -540,20 +512,16 @@ const upgrades = [
         icon: "🎯",
         name: "TIRO POTENTE",
         description: "Aumenta a velocidade dos projéteis em 20%.",
-        apply: () => {
-            player.bulletSpeed *= 1.2;
-        }
+        apply: () => player.bulletSpeed *= 1.2
     }
 ];
 
 function levelUp() {
     level++;
-
     xp -= xpNeeded;
     xpNeeded = Math.floor(xpNeeded * 1.35);
 
     state = "upgrade";
-
     showScreen(upgradeScreen);
 
     const container = $("upgradeOptions");
@@ -565,7 +533,6 @@ function levelUp() {
 
     choices.forEach(upgrade => {
         const card = document.createElement("button");
-
         card.className = "upgrade-card";
 
         card.innerHTML = `
@@ -576,7 +543,6 @@ function levelUp() {
 
         card.addEventListener("click", () => {
             upgrade.apply();
-
             updateHUD();
 
             state = "playing";
@@ -589,9 +555,7 @@ function levelUp() {
     updateHUD();
 }
 
-// =====================================
 // PARTÍCULAS
-// =====================================
 
 function createExplosion(x, y, color, amount) {
     for (let i = 0; i < amount; i++) {
@@ -615,7 +579,6 @@ function updateParticles(dt) {
     particles.forEach(p => {
         p.x += p.vx * dt;
         p.y += p.vy * dt;
-
         p.life -= dt;
     });
 
@@ -631,13 +594,7 @@ function drawParticles() {
     ctx.globalAlpha = 1;
 }
 
-// =====================================
 // MOVIMENTAÇÃO E INVESTIDA
-// =====================================
-
-function isMobile() {
-    return window.matchMedia("(max-width: 650px)").matches;
-}
 
 function movePlayer(dt) {
     let dx = 0;
@@ -688,13 +645,8 @@ function dash() {
     let length = Math.hypot(dx, dy);
 
     if (length === 0) {
-        let angle = Math.atan2(
-            pointer.y - player.y,
-            pointer.x - player.x
-        );
-
-        dx = Math.cos(angle);
-        dy = Math.sin(angle);
+        dx = Math.cos(player.aimAngle);
+        dy = Math.sin(player.aimAngle);
     } else {
         dx /= length;
         dy /= length;
@@ -717,9 +669,7 @@ function dash() {
     createExplosion(player.x, player.y, "#38bdf8", 12);
 }
 
-// =====================================
 // INTERFACE
-// =====================================
 
 function updateHUD() {
     $("healthBar").style.width =
@@ -732,7 +682,6 @@ function updateHUD() {
         Math.min(100, xp / xpNeeded * 100) + "%";
 
     $("levelText").textContent = "NÍVEL " + level;
-
     $("score").textContent = score;
     $("wave").textContent = wave;
 }
@@ -747,9 +696,7 @@ function hideAllScreens() {
         .forEach(screen => screen.classList.add("hidden"));
 }
 
-// =====================================
 // PAUSA E GAME OVER
-// =====================================
 
 function pauseGame() {
     if (state === "playing") {
@@ -779,9 +726,7 @@ function endGame() {
     showScreen(gameOverScreen);
 }
 
-// =====================================
-// ATUALIZAÇÃO DO JOGO
-// =====================================
+// ATUALIZAÇÃO
 
 function update(dt) {
     if (state !== "playing") return;
@@ -794,7 +739,6 @@ function update(dt) {
 
     movePlayer(dt);
 
-    // Disparos automáticos
     shootTimer -= dt;
 
     if (shootTimer <= 0) {
@@ -802,7 +746,6 @@ function update(dt) {
         shootTimer = player.fireRate;
     }
 
-    // Aparecimento dos inimigos
     spawnTimer -= dt;
 
     if (spawnTimer <= 0) {
@@ -812,7 +755,6 @@ function update(dt) {
         spawnTimer = interval;
     }
 
-    // Novas ondas
     let newWave = Math.floor(gameTime / 25) + 1;
 
     if (newWave > wave) {
@@ -826,16 +768,10 @@ function update(dt) {
 
     if (state !== "playing") return;
 
-    if (score > 0) {
-        // Pontuação já atualizada pelos inimigos.
-    }
-
     updateHUD();
 }
 
-// =====================================
-// DESENHAR O JOGO
-// =====================================
+// DESENHAR JOGO
 
 function draw() {
     drawBackground();
@@ -848,28 +784,23 @@ function draw() {
     drawParticles();
     drawPlayer();
 
-    // Indicador da investida
-    if (player.dashCooldown > 0) {
-        ctx.fillStyle = "#aaaacb";
-        ctx.font = "12px Orbitron";
-        ctx.textAlign = "left";
+    ctx.fillStyle = player.dashCooldown > 0
+        ? "#aaaacb"
+        : "#4ade80";
 
-        ctx.fillText(
-            "INVESTIDA: " + player.dashCooldown.toFixed(1) + "s",
-            15,
-            canvas.height - 15
-        );
-    } else {
-        ctx.fillStyle = "#4ade80";
-        ctx.font = "12px Orbitron";
-        ctx.textAlign = "left";
-        ctx.fillText("INVESTIDA DISPONÍVEL", 15, canvas.height - 15);
-    }
+    ctx.font = "12px Orbitron";
+    ctx.textAlign = "left";
+
+    ctx.fillText(
+        player.dashCooldown > 0
+            ? "INVESTIDA: " + player.dashCooldown.toFixed(1) + "s"
+            : "INVESTIDA DISPONÍVEL",
+        15,
+        canvas.height - 15
+    );
 }
 
-// =====================================
 // LOOP PRINCIPAL
-// =====================================
 
 function gameLoop(timestamp) {
     let dt = lastTime
@@ -884,9 +815,7 @@ function gameLoop(timestamp) {
     animationId = requestAnimationFrame(gameLoop);
 }
 
-// =====================================
 // INICIAR E REINICIAR
-// =====================================
 
 function startGame() {
     if (animationId) {
@@ -911,10 +840,7 @@ function startGame() {
     player = createPlayer();
 
     Object.keys(keys).forEach(k => keys[k] = false);
-
     Object.keys(mobile).forEach(k => mobile[k] = false);
-
-    pointer.down = false;
 
     updateHUD();
 
@@ -925,9 +851,7 @@ function startGame() {
     animationId = requestAnimationFrame(gameLoop);
 }
 
-// =====================================
-// CONTROLES DO TECLADO
-// =====================================
+// TECLADO
 
 document.addEventListener("keydown", event => {
     let key = event.key.toLowerCase();
@@ -954,33 +878,7 @@ document.addEventListener("keyup", event => {
     keys[event.key.toLowerCase()] = false;
 });
 
-// =====================================
-// CONTROLES DO MOUSE
-// =====================================
-
-canvas.addEventListener("pointermove", event => {
-    const rect = canvas.getBoundingClientRect();
-
-    pointer.x =
-        (event.clientX - rect.left) * canvas.width / rect.width;
-
-    pointer.y =
-        (event.clientY - rect.top) * canvas.height / rect.height;
-});
-
-canvas.addEventListener("pointerdown", event => {
-    if (event.pointerType === "mouse") {
-        pointer.down = true;
-    }
-});
-
-window.addEventListener("pointerup", () => {
-    pointer.down = false;
-});
-
-// =====================================
 // CONTROLES PARA CELULAR
-// =====================================
 
 function mobileButton(id, direction) {
     const button = $(id);
@@ -1007,9 +905,7 @@ $("dashBtn").addEventListener("pointerdown", event => {
     dash();
 });
 
-// =====================================
-// BOTÕES DO MENU
-// =====================================
+// BOTÕES
 
 $("startBtn").addEventListener("click", startGame);
 $("restartBtn").addEventListener("click", startGame);
@@ -1027,13 +923,10 @@ $("menuBtn").addEventListener("click", () => {
 
     state = "menu";
     showScreen(menu);
-
     draw();
 });
 
-// =====================================
 // TELA INICIAL
-// =====================================
 
 player = createPlayer();
 drawBackground();
