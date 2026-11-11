@@ -1,0 +1,137 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#080817">
+    <title>NEON SURVIVOR</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="top">
+        <div class="logo">NEON<span> SURVIVOR</span></div>
+        <div class="subtitle">SURVIVE THE ENDLESS NIGHT</div>
+    </header>
+
+    <main class="game-wrapper">
+
+        <section class="hud">
+            <div class="stat">
+                <span>VIDA</span>
+                <div class="bar">
+                    <div id="healthBar" class="health-fill"></div>
+                </div>
+                <strong id="healthText">100 / 100</strong>
+            </div>
+
+            <div class="stat">
+                <span>EXPERIÊNCIA</span>
+                <div class="bar">
+                    <div id="xpBar" class="xp-fill"></div>
+                </div>
+                <strong id="levelText">NÍVEL 1</strong>
+            </div>
+
+            <div class="score-box">
+                <span>PONTUAÇÃO</span>
+                <strong id="score">0</strong>
+            </div>
+
+            <div class="score-box">
+                <span>ONDA</span>
+                <strong id="wave">1</strong>
+            </div>
+        </section>
+
+        <div class="arena">
+
+            <canvas id="game" width="960" height="600"></canvas>
+
+            <div id="menu" class="screen">
+                <div class="symbol">✦</div>
+                <h1>NEON SURVIVOR</h1>
+                <p class="description">
+                    Sobreviva às ondas. Evolua. Domine a arena.
+                </p>
+
+                <button id="startBtn">INICIAR JOGO</button>
+
+                <div class="instructions">
+                    <p>W A S D ou SETAS — Movimentar</p>
+                    <p>MOUSE — Mirar e atirar</p>
+                    <p>ESPAÇO — Investida</p>
+                    <p>ESC — Pausar</p>
+                </div>
+
+                <div class="best-menu">
+                    RECORDE: <span id="menuBest">0</span>
+                </div>
+            </div>
+
+            <div id="upgradeScreen" class="screen hidden">
+                <div class="symbol">⬆</div>
+                <h2>SUBIU DE NÍVEL!</h2>
+                <p>Escolha uma melhoria:</p>
+
+                <div id="upgradeOptions" class="upgrade-options"></div>
+            </div>
+
+            <div id="pauseScreen" class="screen hidden">
+                <div class="symbol">Ⅱ</div>
+                <h2>JOGO PAUSADO</h2>
+                <button id="resumeBtn">CONTINUAR</button>
+                <button id="pauseRestartBtn" class="secondary">
+                    RECOMEÇAR
+                </button>
+            </div>
+
+            <div id="gameOver" class="screen hidden">
+                <div class="symbol">☠</div>
+                <h2>FIM DE JOGO</h2>
+                <p>Sua jornada chegou ao fim.</p>
+
+                <div class="results">
+                    <div>
+                        <span>PONTUAÇÃO</span>
+                        <strong id="finalScore">0</strong>
+                    </div>
+                    <div>
+                        <span>ONDA ALCANÇADA</span>
+                        <strong id="finalWave">1</strong>
+                    </div>
+                    <div>
+                        <span>RECORDE</span>
+                        <strong id="finalBest">0</strong>
+                    </div>
+                </div>
+
+                <button id="restartBtn">JOGAR NOVAMENTE</button>
+                <button id="menuBtn" class="secondary">
+                    MENU PRINCIPAL
+                </button>
+            </div>
+
+        </div>
+
+        <div class="mobile-controls">
+            <button id="upBtn">▲</button>
+            <div>
+                <button id="leftBtn">◀</button>
+                <button id="downBtn">▼</button>
+                <button id="rightBtn">▶</button>
+            </div>
+            <button id="dashBtn">⚡</button>
+        </div>
+
+        <div class="bottom-info">
+            <span>✦ NEON SURVIVOR</span>
+            <span>DESAFIE SEUS LIMITES</span>
+        </div>
+
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
